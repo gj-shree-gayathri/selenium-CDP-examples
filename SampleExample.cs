@@ -2,12 +2,12 @@ namespace SeleniumCDP
 {
   using OpenQA.Selenium;
   using OpenQA.Selenium.Chrome;
-    using OpenQA.Selenium.DevTools;
+  using OpenQA.Selenium.DevTools;
   using OpenQA.Selenium.Support.UI;
-    using OpenQA.Selenium.DevTools.V128.Network;
-    using OpenQA.Selenium.DevTools.V128.Performance;
+  using OpenQA.Selenium.DevTools.V128.Network;
+  using OpenQA.Selenium.DevTools.V128.Performance;
 
-    using DevToolsSessionDomains = OpenQA.Selenium.DevTools.V128.DevToolsSessionDomains;
+  using DevToolsSessionDomains = OpenQA.Selenium.DevTools.V128.DevToolsSessionDomains;
   using System.Net;
 
     public class SampleExample
