@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework.Internal;
-
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.DevTools;
@@ -12,6 +11,7 @@ using System.Threading.Tasks;
 public class ResponseCode
 {
   ChromeDriver driver;
+  //setup
   [SetUp]
   public void Setup()
   {
