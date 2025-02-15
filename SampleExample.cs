@@ -6,9 +6,9 @@ namespace SeleniumCDP
   using OpenQA.Selenium.Support.UI;
   using OpenQA.Selenium.DevTools.V128.Network;
   using OpenQA.Selenium.DevTools.V128.Performance;
-
   using DevToolsSessionDomains = OpenQA.Selenium.DevTools.V128.DevToolsSessionDomains;
   using System.Net;
+  using WebDriverManager.DriverConfigs.Impl;
 
     public class SampleExample
     {
@@ -16,8 +16,8 @@ namespace SeleniumCDP
         [SetUp]
         public void Setup()
         {
-
-            driver = new ChromeDriver();
+        new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
+        driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
             var devTools = driver as IDevTools;
             //driver.Navigate().GoToUrl("https://blog.executeautomation.com/");
@@ -28,23 +28,40 @@ namespace SeleniumCDP
        [Test]
         public async Task Consolelog()
         {
-            driver.Url = "https://www.selenium.dev/selenium/web/bidi/logEntryAdded.html";
+      /*var session = ((IDevTools)driver).GetDevToolsSession();
+      var domains = session.GetVersionSpecificDomains<OpenQA.Selenium.DevTools.V128.DevToolsSessionDomains>();
 
-            using IJavaScriptEngine monitor = new JavaScriptEngine(driver);
-            var messages = new List<string>();
-            monitor.JavaScriptConsoleApiCalled += (_, e) =>
-            {
-                messages.Add(e.MessageContent);
-            };
-            await monitor.StartEventMonitoring();
+      await domains.Log.Enable();
+      driver.Url = "https://www.selenium.dev/selenium/web/bidi/logEntryAdded.html";
+      driver.FindElement(By.Id("consoleLog")).Click();
+      driver.FindElement(By.Id("consoleError")).Click();
+      
 
-            driver.FindElement(By.Id("consoleLog")).Click();
-            driver.FindElement(By.Id("consoleError")).Click();
-            new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => messages.Count > 1);
-            monitor.StopEventMonitoring();
+      domains.Log.EntryAdded += (sender, e) =>
+      {
+        Console.WriteLine($"Log: {e.Entry.Level} {e.Entry.Text}");
+      };*/
 
-            Assert.IsTrue(messages.Contains("Hello, world!"));
-            Assert.IsTrue(messages.Contains("I am console error"));
+      //UI/front end errors
+       driver.Url = "https://www.selenium.dev/selenium/web/bidi/logEntryAdded.html";
+
+       using IJavaScriptEngine monitor = new JavaScriptEngine(driver);
+       var messages = new List<string>();
+       monitor.JavaScriptConsoleApiCalled += (_, e) =>
+       {
+           messages.Add(e.MessageContent);
+         Console.WriteLine(e.MessageContent + "\n");
+       };
+       await monitor.StartEventMonitoring();
+
+       driver.FindElement(By.Id("consoleLog")).Click();
+       driver.FindElement(By.Id("consoleError")).Click();
+       new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(_ => messages.Count > 1);
+       monitor.StopEventMonitoring();
+
+       Assert.IsTrue(messages.Contains("Hello, world!"));
+       Assert.IsTrue(messages.Contains("I am console error"));
+      Thread.Sleep(20000);
         }
         [Test]
         public async Task SetCookie()
@@ -84,9 +101,13 @@ namespace SeleniumCDP
                 );
 
             var metrics = metricsResponse.Metrics.ToDictionary(
-                dict => dict.Name,
-                dict => dict.Value
+                metric => metric.Name,
+                metric => metric.Value
             );
+            foreach (var item in metrics)
+            {
+        Console.WriteLine($"{item.Key}->{item.Value}");
+            }
 
             Assert.IsTrue(metrics["DevToolsCommandDuration"] > 0);
             Assert.AreEqual(12, metrics["Frames"]);

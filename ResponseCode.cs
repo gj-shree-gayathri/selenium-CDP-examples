@@ -2,11 +2,11 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.DevTools;
-using OpenQA.Selenium.DevTools.V128.Network;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using System;
 using System.Threading.Tasks;
+
 
 public class ResponseCode
 {
@@ -50,6 +50,7 @@ public class ResponseCode
       {
         Console.WriteLine($"URL received: {e.Response.Url}, Status: {e.Response.Status}, StatusText: {e.Response.StatusText}");
       };
+
 
       // Navigate to a webpage
       driver.Navigate().GoToUrl("https://example.com");
